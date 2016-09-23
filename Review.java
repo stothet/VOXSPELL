@@ -32,7 +32,7 @@ public class Review extends JFrame implements ActionListener{
 	private JTextField textField;
 	ArrayList<String> failed=new ArrayList<String>();
 	ArrayList<String> words;
-	private int track=0;
+	private int track=0,score;
 	private String s;
 	JLabel lblSelectLevel = new JLabel();
 	JLabel lblNewLabel = new JLabel();
@@ -86,7 +86,7 @@ public class Review extends JFrame implements ActionListener{
 		panel.add(btnNewButton);
 		
 		
-		JLabel lblNewLabel = new JLabel("Score");
+		JLabel lblNewLabel = new JLabel("Score: 0");
 		lblNewLabel.setBounds(464, 58, 70, 17);
 		panel.add(lblNewLabel);
 		
@@ -190,13 +190,8 @@ public class Review extends JFrame implements ActionListener{
 
 		else if(e.getActionCommand().equals("Submit")){
 
-			if(textField.getText().isEmpty()||!(textField.getText().matches("[a-zA-Z]+"))){
-				JOptionPane.showMessageDialog( null, "Can only accept characters A-Z or a-z" );
-			}
-			else{
-				//the submit button basically checks if the spelling is right
+			
 				this.check(s);
-			}
 
 		}
 	}
@@ -209,7 +204,8 @@ public class Review extends JFrame implements ActionListener{
 		if(ans.equalsIgnoreCase(word)){
 			lblSelectLevel.setText("Correct");
 			//say("Correct");
-			//lblNewLabel.setText("Score: "+score);
+			score++;
+			lblNewLabel.setText("Score: "+score);
 			failed.remove(word);
 			textField.setText(null);
 			

@@ -13,8 +13,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
+import com.sun.jna.Native;
+import com.sun.jna.NativeLibrary;
 
 import Sound.Festival;
+import uk.co.caprica.vlcj.binding.LibVlc;
+import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -79,7 +85,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 		lblSelectLevel.setBounds(181, 131, 233, 252);
 		panel.add(lblSelectLevel);
 
-		this.say(s);
+		//this.say(s);
 
 		btnNewButton = new JButton("Video");
 		btnNewButton.setBounds(31, 250, 117, 25);
@@ -130,9 +136,9 @@ public class NewSpelling extends JFrame implements ActionListener{
 	}
 
 	public String say(String first){
-		Settings s=new Settings();
-		Festival textToSay=new Festival();
-		textToSay.festivalSaysText(s._festivalVoice,first);
+		//Settings s=new Settings();
+		//Festival textToSay=new Festival();
+		//textToSay.festivalSaysText(s._festivalVoice,first);
 		return first;
 	}
 
@@ -158,9 +164,17 @@ public class NewSpelling extends JFrame implements ActionListener{
 		}
 
 		else if(e.getActionCommand().equals("Video")){
-			Video n=new Video();
-			panel.setVisible(false);
-			n.setVisible(true);
+			NativeLibrary.addSearchPath(
+		            RuntimeUtil.getLibVlcLibraryName(), "/Applications/vlc-2.0.0/VLC.app/Contents/MacOS/lib"
+		        );
+		        Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
+		        
+		        SwingUtilities.invokeLater(new Runnable() {
+		            @Override
+		            public void run() {
+		                new Video();
+		            }
+		        });
 
 		}
 
@@ -181,8 +195,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 
 		else if(e.getActionCommand().equals("Next Level")){
 			Window w=new Window(true);
-			//int lvl=  w._level;
-			int lvl=0;
+			int lvl=  w._level;
 			lvl++;
 			Level l=new Level();
 			try {

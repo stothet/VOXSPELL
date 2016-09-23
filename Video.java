@@ -29,7 +29,7 @@ public class Video {
         
         frame.setContentPane(panel);
 
-        JButton btnMute = new JButton("Shh....");
+        JButton btnMute = new JButton("Mute");
         panel.add(btnMute, BorderLayout.NORTH);
         btnMute.addActionListener(new ActionListener(){
 			@Override
@@ -38,7 +38,15 @@ public class Video {
 			}
 		});
         
-        JButton btnSkip = new JButton("Hurry up!");
+        JButton btnPly = new JButton("Play/Pause");
+        panel.add(btnPly , BorderLayout.SOUTH);
+        btnPly .addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				video.pause();
+			}
+		});
+        JButton btnSkip = new JButton("FastForward");
         btnSkip.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -47,7 +55,7 @@ public class Video {
 		});
         panel.add(btnSkip, BorderLayout.EAST);
 
-        JButton btnSkipBack = new JButton("Say what!?!?");
+        JButton btnSkipBack = new JButton("Rewind");
         btnSkipBack.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -59,7 +67,7 @@ public class Video {
         
         frame.setLocation(100, 100);
         frame.setSize(1050, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
         String filename = "big_buck_bunny_1_minute.avi";

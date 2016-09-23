@@ -6,6 +6,7 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,6 +19,19 @@ public class Video {
     private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
 
     public Video() {
+    	
+    	String command = "ffmpeg -i big_buck_bunny_1_minute.avi -vf lutrgb=\"r=negval:g=negval:b=negval\" output.avi";
+		ProcessBuilder pb = new ProcessBuilder ("/bin/bash", "-c", command);
+		try {
+			pb.start();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	
+    	
+    	
+    	
         JFrame frame = new JFrame("The Awesome Mediaplayer");
 
         mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
@@ -38,6 +52,21 @@ public class Video {
 			}
 		});
         
+        JButton btnNewVid = new JButton("Play New Video Reward");
+        panel.add(btnNewVid, BorderLayout.EAST);
+        btnNewVid.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {			
+				video.playMedia("output.avi");
+			
+			}
+
+			
+		});
+        
+        
+        
+        
         JButton btnPly = new JButton("Play/Pause");
         panel.add(btnPly , BorderLayout.SOUTH);
         btnPly .addActionListener(new ActionListener(){
@@ -46,23 +75,7 @@ public class Video {
 				video.pause();
 			}
 		});
-        JButton btnSkip = new JButton("FastForward");
-        btnSkip.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				video.skip(5000);
-			}
-		});
-        panel.add(btnSkip, BorderLayout.EAST);
-
-        JButton btnSkipBack = new JButton("Rewind");
-        btnSkipBack.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				video.skip(-5000);
-			}
-		});
-        panel.add(btnSkipBack, BorderLayout.WEST);
+       
         
         
         frame.setLocation(100, 100);

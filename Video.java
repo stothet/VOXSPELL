@@ -1,94 +1,68 @@
 package Main;
 
-import java.awt.Dimension;
+import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import java.awt.FlowLayout;
-import java.awt.CardLayout;
-import Main.Window;
-
-public class Video extends JFrame implements ActionListener{
-	JPanel panel = new JPanel();
-	private ArrayList<String> words;
-	private int value;
+import javax.swing.JPanel;
 
 
-	public Video(){
-		panel.setPreferredSize(new Dimension(600,600));
+public class Video {
+	
+    private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
 
-		getContentPane().add(panel);
-		panel.setLayout(new BorderLayout(0, 0));
-		
-		JButton btnNewButton = new JButton("Play/Pause");
-		panel.add(btnNewButton, BorderLayout.SOUTH);
-		
-		JButton btnNewButton_1 = new JButton("Next Level");
-		panel.add(btnNewButton_1, BorderLayout.WEST);
-		
-		JButton btnNewButton_2 = new JButton("Practice");
-		panel.add(btnNewButton_2, BorderLayout.EAST);
-		
-		JButton btnNewButton_3 = new JButton("Quit");
-		panel.add(btnNewButton_3, BorderLayout.NORTH);
-		pack();
+    public Video() {
+        JFrame frame = new JFrame("The Awesome Mediaplayer");
 
-		setTitle("Welcome to the Spelling Aid");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		
-		if(e.getActionCommand().equals("Quit")){
-			
-			Window n=new Window();
-			panel.setVisible(false);
-			n.setVisible(true);
+        mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
 
-		}
+        final EmbeddedMediaPlayer video = mediaPlayerComponent.getMediaPlayer();
+        
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(mediaPlayerComponent, BorderLayout.CENTER);
+        
+        frame.setContentPane(panel);
 
-		else if(e.getActionCommand().equals("Practice")){
-			
-			panel.setVisible(false);
-			(new NewSpelling(words)).setVisible(true);
-
-		}
-
-		else if(e.getActionCommand().equals("Play/Pause")){
-			
-
-		}
-
-		else if(e.getActionCommand().equals("Next Level")){
-			
-			Window w=new Window(true);
-			int lvl = w._level;
-			lvl++;
-	        Level l=new Level();
-			try {
-				words=l.getInput((lvl));
-			} catch (IOException e1) {
-				e1.printStackTrace();
+        JButton btnMute = new JButton("Shh....");
+        panel.add(btnMute, BorderLayout.NORTH);
+        btnMute.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				video.mute();
 			}
-	        panel.setVisible(false);
-			(new NewSpelling(words)).setVisible(true);
+		});
+        
+        JButton btnSkip = new JButton("Hurry up!");
+        btnSkip.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				video.skip(5000);
+			}
+		});
+        panel.add(btnSkip, BorderLayout.EAST);
 
-		}
+        JButton btnSkipBack = new JButton("Say what!?!?");
+        btnSkipBack.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				video.skip(-5000);
+			}
+		});
+        panel.add(btnSkipBack, BorderLayout.WEST);
+        
+        
+        frame.setLocation(100, 100);
+        frame.setSize(1050, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
 
-	}
+        String filename = "big_buck_bunny_1_minute.avi";
+        video.playMedia(filename);
+    }
 }

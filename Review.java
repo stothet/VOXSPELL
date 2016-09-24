@@ -22,12 +22,15 @@ import Sound.Festival;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import java.awt.Font;
+import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.BorderLayout;
 
 public class Review extends JFrame implements ActionListener{
 	private JButton btnN = new JButton("Submit");
 	private JButton btnV = new JButton("Back");
-	private JButton btnR = new JButton("Re-Listen");
-	private JButton btnS = new JButton("Practice");
+	private JButton btnR = new JButton("");
 	JPanel panel = new JPanel();
 	private JTextField textField;
 	ArrayList<String> failed=new ArrayList<String>();
@@ -38,21 +41,24 @@ public class Review extends JFrame implements ActionListener{
 	JLabel lblNewLabel = new JLabel();
 
 	public Review(){
+		panel.setBackground(new Color(25, 25, 112));
 		panel.setPreferredSize(new Dimension(600,600));
 		panel.setLayout(null);
-		btnN.setBounds(139, 500, 126, 25);
+		btnN.setFont(new Font("LM Roman 9", Font.BOLD, 14));
+		btnN.setBounds(72, 545, 126, 25);
 		//adding buttons
 		panel.add(btnN);
 		btnN.addActionListener(this);
-		btnR.setBounds(374, 500, 139, 25);
+		btnR.setBackground(new Color(255, 255, 255));
+		btnR.setIcon(new ImageIcon("/afs/ec.auckland.ac.nz/users/m/k/mkim907/unixhome/Downloads/VOXSPELL/play.png"));
+		btnR.setFont(new Font("LM Roman 9", Font.BOLD, 14));
+		btnR.setBounds(459, 273, 127, 120);
 		panel.add(btnR);
+		btnV.setFont(new Font("LM Roman 9", Font.BOLD, 14));
 		btnV.setBounds(12, 12, 139, 25);
 		panel.add(btnV);
-		btnS.setBounds(31, 131, 94, 25);
-		panel.add(btnS);
 		btnR.addActionListener(this);
 		btnV.addActionListener(this);
-		btnS.addActionListener(this);
 		btnN.addActionListener(this);
 
 		File f=new File("./failed");
@@ -73,49 +79,42 @@ public class Review extends JFrame implements ActionListener{
 			}
 		}
 		
-		getContentPane().add(panel);
+		getContentPane().add(panel, BorderLayout.SOUTH);
+		lblSelectLevel.setFont(new Font("LM Roman Caps 10", Font.BOLD, 40));
+		lblSelectLevel.setForeground(new Color(255, 255, 0));
 	
 		
 		lblSelectLevel.setText(s=getWord());
-		lblSelectLevel.setBounds(181, 131, 233, 252);
+		lblSelectLevel.setBounds(12, 131, 429, 334);
 		panel.add(lblSelectLevel);
 		
 		
 		JButton btnNewButton = new JButton("Video");
-		btnNewButton.setBounds(31, 250, 117, 25);
+		btnNewButton.setFont(new Font("LM Roman 9", Font.BOLD, 14));
+		btnNewButton.setBounds(217, 477, 117, 25);
 		panel.add(btnNewButton);
 		
 		
 		JLabel lblNewLabel = new JLabel("Score: 0");
-		lblNewLabel.setBounds(464, 58, 70, 17);
+		lblNewLabel.setForeground(new Color(255, 255, 0));
+		lblNewLabel.setFont(new Font("LM Roman Dunhill 10", Font.BOLD, 25));
+		lblNewLabel.setBounds(436, 12, 152, 48);
 		panel.add(lblNewLabel);
-		
-		btnS.setVisible(false);
 		btnNewButton.setVisible(false);
 		
 		textField = new JTextField();
-		textField.setBounds(231, 56, 114, 19);
+		textField.setBounds(172, 56, 219, 48);
 		panel.add(textField);
 		textField.setColumns(10);
 		
-		JButton btnNewButton_2 = new JButton("View Statistics");
-		btnNewButton_2.setBounds(432, 280, 149, 76);
-		panel.add(btnNewButton_2);
-		
-		JButton btnNewButton_1 = new JButton("Next Word");
-		btnNewButton_1.setBounds(215, 545, 117, 25);
-		panel.add(btnNewButton_1);
-		
 		JButton btnNewButton_3 = new JButton("Try Again");
+		btnNewButton_3.setFont(new Font("LM Roman 9", Font.BOLD, 14));
 		btnNewButton_3.setBounds(355, 545, 117, 25);
 		panel.add(btnNewButton_3);
 		pack();
-		
-		btnNewButton_1.addActionListener(this);
-		btnNewButton_2.addActionListener(this);
 		btnNewButton_3.addActionListener(this);
 
-		setTitle("Welcome to the Spelling Aid");
+		setTitle("Review: Never too late to improve!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
@@ -169,12 +168,6 @@ public class Review extends JFrame implements ActionListener{
 			this.reviewSecondChance(s);
 			textField.setText(null);
 
-
-		}
-
-		else if(e.getActionCommand().equals("Practice")){
-			panel.setVisible(false);
-			(new NewSpelling(words)).setVisible(true);
 
 		}
 

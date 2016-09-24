@@ -1,20 +1,40 @@
 package Sound;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import javax.swing.JOptionPane;
 
-public class Festival {
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
-public void festivalSaysText( String _festivalVoice, String textToSay){
+public class Festival  extends SwingWorker<Void,Void>{
+
+	String _festivalVoiceCurrent;
+	String _textToSayCurrent;
+	
+public void festivalSaysText( final String _festivalVoice, String textToSay){
+	_festivalVoiceCurrent=_festivalVoice;
+	_textToSayCurrent=textToSay;
+	
+	execute();
+				
+}
+
+@Override
+protected Void doInBackground() throws Exception {
 	try{
-		String command = "festival";
+		
+		String o="hello";
+		String command = "echo "+o+" | festival --tts";
 		ProcessBuilder pb = new ProcessBuilder ("/bin/bash", "-c", command);
-		pb.start();
+		
+			pb.start();
 		
 		
-		command = "("+_festivalVoice+")";
+		
+		command = "("+_festivalVoiceCurrent+")";
 		pb = new ProcessBuilder (command);
 		pb.start();
 		
@@ -48,7 +68,6 @@ public void festivalSaysText( String _festivalVoice, String textToSay){
 	} catch (Exception e1) {
 		e1.printStackTrace();
 	}
-		
-	}
-	
+	return null;
+}
 }

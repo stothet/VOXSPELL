@@ -42,7 +42,6 @@ public class NewSpelling extends JFrame implements ActionListener{
 	private ArrayList<String> words;
 	private int track=0;
 	String s;
-	//private int count;
 	private int _wordCount=1;
 	private int score=0;
 	private int level;
@@ -74,7 +73,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 		panel.setPreferredSize(new Dimension(600,600));
 		panel.setLayout(null);
 		btnN.setFont(new Font("LM Roman 9", Font.BOLD, 14));
-		btnN.setBounds(159, 557, 126, 25);
+		btnN.setBounds(179, 518, 194, 54);
 		//adding buttons
 		panel.add(btnN);
 		btnN.addActionListener(this);
@@ -100,7 +99,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 		lblSelectLevel.setBounds(37, 93, 377, 337);
 		panel.add(lblSelectLevel);
 
-		//this.say(s);
+		this.say(s);
 
 		btnNewButton = new JButton("Video");
 		btnNewButton.setFont(new Font("LM Roman 9", Font.BOLD, 14));
@@ -126,11 +125,6 @@ public class NewSpelling extends JFrame implements ActionListener{
 		textField.setBounds(179, 35, 166, 46);
 		panel.add(textField);
 		textField.setColumns(10);
-
-		JButton btnTryAgain = new JButton("Try Again");
-		btnTryAgain.setFont(new Font("LM Roman 9", Font.BOLD, 14));
-		btnTryAgain.setBounds(330, 557, 117, 25);
-		panel.add(btnTryAgain);
 		lblNewLabel_1.setBounds(464, 342, 70, 15);
 		
 		panel.add(lblNewLabel_1);
@@ -146,7 +140,6 @@ public class NewSpelling extends JFrame implements ActionListener{
 
 		btnNewButton.addActionListener(this);
 		btnNewButton_1.addActionListener(this);
-		btnTryAgain.addActionListener(this);
 	}
 
 	public String getWord(){
@@ -156,9 +149,9 @@ public class NewSpelling extends JFrame implements ActionListener{
 	}
 
 	public String say(String first){
-		//Settings s=new Settings();
-		//Festival textToSay=new Festival();
-		//textToSay.festivalSaysText(s._festivalVoice,first);
+		Settings s=new Settings();
+		Festival textToSay=new Festival();
+		textToSay.festivalSaysText(s._festivalVoice,first);
 		return first;
 	}
 
@@ -251,6 +244,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 			}
 				else{
 					lblSelectLevel.setText(s=getWord());
+					btnN.setText("Submit");
 				}
 				textField.setText(null);
 			}
@@ -275,19 +269,21 @@ public class NewSpelling extends JFrame implements ActionListener{
 			//checks for first attempt
 			if(ans.equalsIgnoreCase(word)){
 				lblSelectLevel.setText("Correct");
-				//say("Correct");
+				say("Correct");
 				score++;
 				lblNewLabel.setText("Score: "+score);
 				textField.setText(null);
+				btnN.setText("Next Word");
 
 
 			}
 			else{
 				//if answer is wrong, makes a call to festival through bash to say the messages
 				lblSelectLevel.setText("Incorrect, Try once more");
-				//say("Incorrect, Try once more");
-				//say(""+word+","+word);
+				say("Incorrect, Try once more");
+				say(""+word+","+word);
 				lblSelectLevel.setText(s);
+				btnN.setText("Try Again");
 
 
 			}
@@ -307,11 +303,12 @@ public class NewSpelling extends JFrame implements ActionListener{
 			}
 			else{
 				lblSelectLevel.setText("Incorrect");
-				//say("Incorrect");
+				say("Incorrect");
 				//if word is failed on both tries, it is added to failed file (for review) and original file (for viewing statistics)
 				File fw = new File ("./failed.txt");
 				addToFile(word, fw);
 			}
+			btnN.setText("Submit");
 			//submit button is then made visible, try again is invisible again
 		}
 

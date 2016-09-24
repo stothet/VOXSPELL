@@ -43,17 +43,17 @@ public class Video {
         
         frame.setContentPane(panel);
 
-        JButton btnMute = new JButton("Mute");
+        /*JButton btnMute = new JButton("Mute");
         panel.add(btnMute, BorderLayout.NORTH);
         btnMute.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				video.mute();
 			}
-		});
+		});*/
         
         JButton btnNewVid = new JButton("Play New Video Reward");
-        panel.add(btnNewVid, BorderLayout.EAST);
+        panel.add(btnNewVid, BorderLayout.NORTH);
         btnNewVid.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {			
@@ -64,7 +64,12 @@ public class Video {
 			
 		});
         
-        
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                video.stop();
+            }
+        });
         
         
         JButton btnPly = new JButton("Play/Pause");

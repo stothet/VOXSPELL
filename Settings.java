@@ -1,5 +1,6 @@
 package Main;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JSeparator;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Font;
 
 public class Settings extends JFrame implements ActionListener{
 	private JButton btnV = new JButton("Back");
@@ -20,10 +22,12 @@ public class Settings extends JFrame implements ActionListener{
 	String _festivalVoice = "voice_rab_diphone";
 
 	public Settings(){
+		panel.setBackground(new Color(0, 128, 128));
 		panel.setPreferredSize(new Dimension(600,600));
 		panel.setLayout(null);
-		btnV.setBounds(12, 12, 139, 25);
+		btnV.setBounds(12, 12, 94, 25);
 		panel.add(btnV);
+		btnS.setFont(new Font("LM Roman 9", Font.BOLD, 14));
 		btnS.setBounds(440, 245, 94, 25);
 		panel.add(btnS);
 		btnV.addActionListener(this);
@@ -32,11 +36,15 @@ public class Settings extends JFrame implements ActionListener{
 		getContentPane().add(panel);
 
 		JLabel lblSelectLevel = new JLabel("Clear");
+		lblSelectLevel.setForeground(new Color(255, 255, 0));
+		lblSelectLevel.setFont(new Font("LM Roman 9", Font.BOLD, 25));
 		lblSelectLevel.setBounds(40, 245, 262, 25);
 		panel.add(lblSelectLevel);
 
 		JLabel lblNewLabel = new JLabel("Select Voice");
-		lblNewLabel.setBounds(57, 431, 232, 17);
+		lblNewLabel.setFont(new Font("LM Roman 9", Font.BOLD, 25));
+		lblNewLabel.setForeground(new Color(255, 255, 0));
+		lblNewLabel.setBounds(40, 420, 272, 56);
 		panel.add(lblNewLabel);
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Voice 1 (Default/RAB)", "Voice 2 (KAL)"}));
 
@@ -45,6 +53,7 @@ public class Settings extends JFrame implements ActionListener{
 		panel.add(comboBox);
 
 		JButton btnNewButton = new JButton("Apply Changes");
+		btnNewButton.setFont(new Font("LM Roman 9", Font.BOLD, 14));
 		btnNewButton.setBounds(358, 534, 199, 25);
 		panel.add(btnNewButton);
 
@@ -53,7 +62,7 @@ public class Settings extends JFrame implements ActionListener{
 		panel.add(separator);
 		pack();
 
-		setTitle("Welcome to the Spelling Aid");
+		setTitle("Settings for all your tinkering");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 	}

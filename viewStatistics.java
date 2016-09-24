@@ -13,13 +13,16 @@ import javax.swing.JTextArea;
 import Main.Level.Levels;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.awt.Color;
+import javax.swing.JButton;
 
 
-public class viewStatistics extends JFrame {
+public class viewStatistics extends JFrame implements ActionListener{
 	JPanel panel = new JPanel();
 	JTextArea textArea = new JTextArea();
 
@@ -43,11 +46,16 @@ public class viewStatistics extends JFrame {
 		lblAccuracyRates.setFont(new Font("Bitstream Charter", Font.BOLD, 30));
 		lblAccuracyRates.setBounds(190, 65, 332, 40);
 		panel.add(lblAccuracyRates);
+		
+		JButton btnNewButton = new JButton("Back");
+		btnNewButton.setBounds(26, 12, 67, 25);
+		panel.add(btnNewButton);
 		pack();
 
 		setTitle("See how awesome you are doing!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
+		btnNewButton.addActionListener(this);
 
 	}
 
@@ -71,5 +79,15 @@ public class viewStatistics extends JFrame {
 
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getActionCommand().equals("Back")){
+			Window n=new Window();
+			panel.setVisible(false);
+			n.setVisible(true);
 
+		}
+		
+	}
 }

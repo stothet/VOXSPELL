@@ -25,12 +25,16 @@ import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.BorderLayout;
+import javax.swing.ImageIcon;
+import java.awt.Font;
+import javax.swing.JTextArea;
+import java.awt.Color;
 
 
 public class NewSpelling extends JFrame implements ActionListener{
 	private JButton btnN = new JButton("Submit");
 	private JButton btnV = new JButton("Back");
-	private JButton btnR = new JButton("Re-Listen");
+	private JButton btnR = new JButton("");
 	private JButton btnS = new JButton("Practice");
 	JPanel panel = new JPanel();
 	private JTextField textField;
@@ -38,10 +42,10 @@ public class NewSpelling extends JFrame implements ActionListener{
 	private ArrayList<String> words;
 	private int track=0;
 	String s;
-	private final JButton btnNewButton_3 = new JButton("Next Word");
 	//private int count;
-	private int _wordCount;
+	private int _wordCount=1;
 	private int score=0;
+	private int level;
 	JLabel lblSelectLevel = new JLabel();
 	JLabel lblNewLabel = new JLabel("Score: 0");
 	JLabel lblNewLabel_1 = new JLabel();
@@ -59,73 +63,89 @@ public class NewSpelling extends JFrame implements ActionListener{
 	}
 
 
-	public NewSpelling(ArrayList<String> words){
+	public NewSpelling(ArrayList<String> words, int level){
+		setBackground(new Color(250, 250, 210));
 
+		this.level=level;
+		
 		this.words=words;
+		panel.setBackground(new Color(72, 61, 139));
 
 		panel.setPreferredSize(new Dimension(600,600));
 		panel.setLayout(null);
-		btnN.setBounds(85, 526, 126, 25);
+		btnN.setFont(new Font("LM Roman 9", Font.BOLD, 14));
+		btnN.setBounds(159, 557, 126, 25);
 		//adding buttons
 		panel.add(btnN);
 		btnN.addActionListener(this);
-		btnR.setBounds(376, 526, 139, 25);
+		btnR.setBackground(new Color(255, 255, 255));
+		btnR.setIcon(new ImageIcon("/afs/ec.auckland.ac.nz/users/m/k/mkim907/unixhome/Downloads/VOXSPELL/play.png"));
+		btnR.setBounds(443, 306, 136, 96);
 		panel.add(btnR);
-		btnV.setBounds(12, 12, 139, 25);
+		btnV.setFont(new Font("LM Roman 9", Font.BOLD, 14));
+		btnV.setBounds(12, 12, 70, 25);
 		panel.add(btnV);
-		btnS.setBounds(31, 131, 94, 25);
+		btnS.setFont(new Font("LM Roman 9", Font.BOLD, 14));
+		btnS.setBounds(37, 463, 94, 25);
 		panel.add(btnS);
 		btnR.addActionListener(this);
 		btnV.addActionListener(this);
 		btnS.addActionListener(this);
 
 		getContentPane().add(panel, BorderLayout.SOUTH);
+		lblSelectLevel.setForeground(new Color(255, 255, 0));
+		lblSelectLevel.setFont(new Font("L M Roman Caps10", Font.BOLD, 40));
 
 		lblSelectLevel.setText(s=getWord());
-		lblSelectLevel.setBounds(181, 131, 233, 252);
+		lblSelectLevel.setBounds(37, 93, 377, 337);
 		panel.add(lblSelectLevel);
 
 		//this.say(s);
 
 		btnNewButton = new JButton("Video");
-		btnNewButton.setBounds(31, 250, 117, 25);
+		btnNewButton.setFont(new Font("LM Roman 9", Font.BOLD, 14));
+		btnNewButton.setBounds(239, 463, 117, 25);
 		panel.add(btnNewButton);
 
 		btnNewButton_1 = new JButton("Next Level");
-		btnNewButton_1.setBounds(36, 358, 117, 25);
+		btnNewButton_1.setFont(new Font("LM Roman 9", Font.BOLD, 14));
+		btnNewButton_1.setBounds(464, 463, 117, 25);
 		panel.add(btnNewButton_1);
 
 		btnS.setVisible(false);
 		btnNewButton_1.setVisible(false);
 		btnNewButton.setVisible(false);
+		lblNewLabel.setForeground(new Color(255, 255, 0));
+		lblNewLabel.setFont(new Font("LM Roman Dunhill 10", Font.BOLD, 25));
 
 
-		lblNewLabel.setBounds(464, 58, 70, 17);
+		lblNewLabel.setBounds(432, 0, 156, 46);
 		panel.add(lblNewLabel);
 
 		textField = new JTextField();
-		textField.setBounds(231, 56, 114, 19);
+		textField.setBounds(179, 35, 166, 46);
 		panel.add(textField);
 		textField.setColumns(10);
-		btnNewButton_3.setBounds(161, 563, 117, 25);
-
-		panel.add(btnNewButton_3);
 
 		JButton btnTryAgain = new JButton("Try Again");
-		btnTryAgain.setBounds(308, 563, 117, 25);
+		btnTryAgain.setFont(new Font("LM Roman 9", Font.BOLD, 14));
+		btnTryAgain.setBounds(330, 557, 117, 25);
 		panel.add(btnTryAgain);
 		lblNewLabel_1.setBounds(464, 342, 70, 15);
 		
 		panel.add(lblNewLabel_1);
+		
+		JTextArea textArea = new JTextArea();
+		textArea.setBounds(432, 58, 156, 204);
+		panel.add(textArea);
 		pack();
 
-		setTitle("Welcome to the Spelling Aid");
+		setTitle("New Quiz, Good Luck!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
 		btnNewButton.addActionListener(this);
 		btnNewButton_1.addActionListener(this);
-		btnNewButton_3.addActionListener(this);
 		btnTryAgain.addActionListener(this);
 	}
 
@@ -189,23 +209,21 @@ public class NewSpelling extends JFrame implements ActionListener{
 
 		else if(e.getActionCommand().equals("Practice")){
 			panel.setVisible(false);
-			(new NewSpelling(words)).setVisible(true);
+			(new NewSpelling(words,level)).setVisible(true);
 
 		}
 
 		else if(e.getActionCommand().equals("Next Level")){
-			Window w=new Window(true);
-			int lvl=  w._level;
-			lvl++;
+			level++;
 			Level l=new Level();
 			try {
-				words=l.getInput((lvl));
+				words=l.getInput((level));
 			} catch (NumberFormatException | IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
 			panel.setVisible(false);
-			(new NewSpelling(words)).setVisible(true);
+			(new NewSpelling(words,level)).setVisible(true);
 
 		}
 

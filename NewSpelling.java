@@ -99,7 +99,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 		lblSelectLevel.setBounds(37, 93, 377, 337);
 		panel.add(lblSelectLevel);
 
-		this.say(s);
+		//this.say(s);
 
 		btnNewButton = new JButton("Video");
 		btnNewButton.setFont(new Font("LM Roman 9", Font.BOLD, 14));
@@ -167,7 +167,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 		}
 
 		else if(e.getActionCommand().equals("Re-Listen")){
-			say(s);
+			//say(s);
 
 		}
 
@@ -269,7 +269,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 			//checks for first attempt
 			if(ans.equalsIgnoreCase(word)){
 				lblSelectLevel.setText("Correct");
-				say("Correct");
+				//say("Correct");
 				score++;
 				lblNewLabel.setText("Score: "+score);
 				textField.setText(null);
@@ -280,8 +280,8 @@ public class NewSpelling extends JFrame implements ActionListener{
 			else{
 				//if answer is wrong, makes a call to festival through bash to say the messages
 				lblSelectLevel.setText("Incorrect, Try once more");
-				say("Incorrect, Try once more");
-				say(""+word+","+word);
+				//say("Incorrect, Try once more");
+				//say(""+word+","+word);
 				lblSelectLevel.setText(s);
 				btnN.setText("Try Again");
 
@@ -303,12 +303,12 @@ public class NewSpelling extends JFrame implements ActionListener{
 			}
 			else{
 				lblSelectLevel.setText("Incorrect");
-				say("Incorrect");
+				//say("Incorrect");
 				//if word is failed on both tries, it is added to failed file (for review) and original file (for viewing statistics)
 				File fw = new File ("./failed.txt");
 				addToFile(word, fw);
 			}
-			btnN.setText("Submit");
+			btnN.setText("Next Word");
 			//submit button is then made visible, try again is invisible again
 		}
 

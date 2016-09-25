@@ -68,7 +68,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 		this.level=level;
 		
 		this.words=words;
-		panel.setBackground(new Color(72, 61, 139));
+		panel.setBackground(new Color(0, 0, 128));
 
 		panel.setPreferredSize(new Dimension(600,600));
 		panel.setLayout(null);

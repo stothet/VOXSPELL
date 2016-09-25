@@ -4,6 +4,8 @@ package Main;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JButton;
@@ -15,6 +17,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import java.awt.BorderLayout;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.MatteBorder;
+import java.awt.Color;
+import java.awt.Font;
 
 
 public class Window extends JFrame implements ActionListener{
@@ -35,34 +43,47 @@ public class Window extends JFrame implements ActionListener{
 	}
 
 	public Window(){
+		panel.setBackground(new Color(0, 128, 128));
+		panel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 100, 0)));
 		panel.setPreferredSize(new Dimension(600,600));
 		panel.setLayout(null);
-		btnN.setBounds(52, 5, 126, 25);
+		btnN.setBackground(new Color(255, 250, 205));
+		btnN.setBounds(39, 384, 126, 65);
 		//adding buttons
 		panel.add(btnN);
 		btnN.addActionListener(this);
-		btnR.setBounds(183, 5, 84, 25);
+		btnR.setBackground(new Color(255, 250, 205));
+		btnR.setBounds(206, 384, 84, 65);
 		panel.add(btnR);
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"}));
 		comboBox.setBounds(326, 525, 251, 24);
 
 		panel.add(comboBox);
-		btnV.setBounds(309, 5, 139, 25);
+		btnV.setBackground(new Color(255, 250, 205));
+		btnV.setBounds(326, 384, 139, 65);
 		panel.add(btnV);
-		btnS.setBounds(453, 5, 94, 25);
+		btnS.setBackground(new Color(255, 250, 205));
+		btnS.setBounds(494, 384, 94, 65);
 		panel.add(btnS);
 		btnR.addActionListener(this);
 		btnV.addActionListener(this);
 		btnS.addActionListener(this);
 
-		getContentPane().add(panel);
+		getContentPane().add(panel, BorderLayout.NORTH);
 
 		JLabel lblSelectLevel = new JLabel("Select Level");
-		lblSelectLevel.setBounds(39, 530, 186, 15);
+		lblSelectLevel.setForeground(new Color(255, 250, 240));
+		lblSelectLevel.setFont(new Font("Cantarell", Font.BOLD, 20));
+		lblSelectLevel.setBounds(39, 512, 251, 33);
 		panel.add(lblSelectLevel);
+
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon("./14466478_10154557473139513_2095106893_o.jpg"));
+		lblNewLabel.setBounds(-346, -13, 1012, 389);
+		panel.add(lblNewLabel);
 		pack();
 
-		setTitle("Welcome to the Spelling Aid");
+		setTitle("Welcome to the VOXSPELL Spelling Aid");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 	}
@@ -95,26 +116,48 @@ public class Window extends JFrame implements ActionListener{
 			e2.printStackTrace();
 		}
 
+
 		if(e.getActionCommand().equals("New Spelling")){
 
-			NewSpelling r=new NewSpelling(words);
+			NewSpelling r=new NewSpelling(words,_level);
 			this.setVisible(false);
 			r.setVisible(true);
 
 		}
 
 		else if(e.getActionCommand().equals("Review")){
-			Review r=new Review();
+			words.clear();
+			String scan;
+			FileReader in;
+			try {
+				in = new FileReader("./failed");
+				BufferedReader br = new BufferedReader(in);
+				while(br.ready()){
+					scan=br.readLine();
+					words.add(scan);
+				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			Review r=new Review(words);
 			this.setVisible(false);
 			r.setVisible(true);
+
 		}
 
 		else if(e.getActionCommand().equals("View Statistics")){
 
-			viewStatistics r=new viewStatistics();
-			panel.setVisible(false);
-			r.setVisible(true);
-			
+			viewStatistics r;
+			try {
+				r = new viewStatistics();
+				panel.setVisible(false);
+				r.setVisible(true);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 
 		}
 		else if(e.getActionCommand().equals("Settings")){
@@ -124,4 +167,6 @@ public class Window extends JFrame implements ActionListener{
 		}
 
 	}
+
+
 }

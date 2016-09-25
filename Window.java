@@ -119,6 +119,8 @@ public class Window extends JFrame implements ActionListener{
 			NewSpelling r=new NewSpelling(words,_level);
 			this.setVisible(false);
 			r.setVisible(true);
+			r.say(r.words.get(0));
+
 
 		}
 
@@ -126,6 +128,7 @@ public class Window extends JFrame implements ActionListener{
 			Review r=new Review();
 			this.setVisible(false);
 			r.setVisible(true);
+			r.say(r.words.get(0));
 		}
 
 		else if(e.getActionCommand().equals("View Statistics")){

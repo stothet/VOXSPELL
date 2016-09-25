@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Font;
 
 
 public class Video {
@@ -35,16 +37,24 @@ public class Video {
         JFrame frame = new JFrame("The video reward to fullfill your heart!");
 
         mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
+        mediaPlayerComponent.setBounds(73, 102, 1041, 589);
+        mediaPlayerComponent.getVideoSurface().setBounds(0, 0, 849, 550);
 
         final EmbeddedMediaPlayer video = mediaPlayerComponent.getMediaPlayer();
         
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(mediaPlayerComponent, BorderLayout.CENTER);
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(0, 128, 128));
+        panel.setLayout(null);
+        panel.add(mediaPlayerComponent);
+        mediaPlayerComponent.setLayout(null);
         
         frame.setContentPane(panel);
 
         JButton btnMute = new JButton("Mute");
-        panel.add(btnMute, BorderLayout.NORTH);
+        btnMute.setBackground(new Color(240, 230, 140));
+        btnMute.setFont(new Font("LM Roman 9", Font.BOLD, 16));
+        btnMute.setBounds(73, 12, 111, 64);
+        panel.add(btnMute);
         btnMute.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -53,7 +63,10 @@ public class Video {
 		});
         
         JButton btnNewVid = new JButton("Play New Video Reward");
-        panel.add(btnNewVid, BorderLayout.EAST);
+        btnNewVid.setBackground(new Color(255, 250, 205));
+        btnNewVid.setFont(new Font("LM Roman Caps 10", Font.BOLD, 25));
+        btnNewVid.setBounds(695, 10, 418, 64);
+        panel.add(btnNewVid);
         btnNewVid.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {			
@@ -73,7 +86,8 @@ public class Video {
         
         
         JButton btnPly = new JButton("Play/Pause");
-        panel.add(btnPly , BorderLayout.SOUTH);
+        btnPly.setBounds(502, 722, 224, 101);
+        panel.add(btnPly);
         btnPly .addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -84,7 +98,7 @@ public class Video {
         
         
         frame.setLocation(100, 100);
-        frame.setSize(1050, 600);
+        frame.setSize(1200, 900);
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 

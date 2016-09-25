@@ -34,7 +34,7 @@ public class Video {
     	
     	
     	
-        JFrame frame = new JFrame("The video reward to fullfill your heart!");
+        JFrame frame = new JFrame("The video reward to fulfill your heart!");
 
         mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
         mediaPlayerComponent.setBounds(180, 100, 849, 550);

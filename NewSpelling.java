@@ -294,13 +294,10 @@ public class NewSpelling extends JFrame implements ActionListener{
 
 			}
 			else{
-				//if answer is wrong, makes a call to festival through bash to say the messages
 				lblSelectLevel.setText("Incorrect, Try once more");
-				//say("Incorrect, Try once more");
-				//say(""+word+","+word);
-				lblSelectLevel.setText(s);
-				btnN.setText("Try Again");
-
+			say("Incorrect, Try once more,"+ " \n" + "    ,"+ word +",           \n " + word);
+			lblSelectLevel.setText(s);
+			btnN.setText("Try Again");
 
 			}
 

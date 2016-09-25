@@ -4,13 +4,21 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JSeparator;
+
+import Sound.Festival;
+
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Font;
 
@@ -19,7 +27,7 @@ public class Settings extends JFrame implements ActionListener{
 	private JButton btnS = new JButton("Clear");
 	JPanel panel = new JPanel();
 	private JComboBox comboBox = new JComboBox();
-	String _festivalVoice = "voice_rab_diphone";
+	private String _festivalVoice;
 
 	public Settings(){
 		panel.setBackground(new Color(0, 128, 128));
@@ -46,7 +54,7 @@ public class Settings extends JFrame implements ActionListener{
 		lblNewLabel.setForeground(new Color(255, 255, 0));
 		lblNewLabel.setBounds(40, 420, 272, 56);
 		panel.add(lblNewLabel);
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Voice 1 (Default/RAB)", "Voice 2 (KAL)"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"voice_rab_diphone", "voice_kal_diphone"}));
 
 
 		comboBox.setBounds(358, 427, 176, 24);
@@ -56,7 +64,7 @@ public class Settings extends JFrame implements ActionListener{
 		btnNewButton.setFont(new Font("LM Roman 9", Font.BOLD, 14));
 		btnNewButton.setBounds(358, 534, 199, 25);
 		panel.add(btnNewButton);
-
+		btnNewButton.addActionListener(this);
 		JSeparator separator = new JSeparator();
 		separator.setBounds(0, 314, 588, 25);
 		panel.add(separator);
@@ -65,10 +73,6 @@ public class Settings extends JFrame implements ActionListener{
 		setTitle("Settings for all your tinkering");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-	}
-
-	public void setVoice(String choice){
-		_festivalVoice= choice;
 	}
 
 
@@ -163,9 +167,25 @@ public class Settings extends JFrame implements ActionListener{
 
 		else if(e.getActionCommand().equals("Apply Changes")){
 			String _choice = (String)comboBox.getSelectedItem();
-			this.setVoice(_choice);
+			File file = new File ("./voice");
+			try(FileWriter fw = new FileWriter(file, true);
+					BufferedWriter bw = new BufferedWriter(fw);
+					PrintWriter out = new PrintWriter(bw))
+			{
+				out.println(_choice);
+			} catch (Exception e4) {
+
+			}
+			_festivalVoice=_choice;
+			say("This is the current voice");
 
 		}
 
+	}
+	
+	public String say(String first){
+		Festival textToSay=new Festival();
+		textToSay.festivalSaysText(_festivalVoice,first);
+		return first;
 	}
 }

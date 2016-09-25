@@ -3,8 +3,10 @@ package Main;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,6 +45,7 @@ public class Review extends JFrame implements ActionListener{
 	String s;
 	JLabel lblSelectLevel = new JLabel();
 	JLabel lblNewLabel_1 = new JLabel();
+	private String _voice;
 
 
 	public enum Files{
@@ -84,11 +87,8 @@ public class Review extends JFrame implements ActionListener{
 		lblSelectLevel.setForeground(new Color(255, 255, 0));
 		lblSelectLevel.setFont(new Font("L M Roman Caps10", Font.BOLD, 40));
 
-		lblSelectLevel.setText(s=getWord());
 		lblSelectLevel.setBounds(37, 93, 377, 337);
 		panel.add(lblSelectLevel);
-
-		//this.say(s);
 
 		btnNewButton = new JButton("Video");
 		btnNewButton.setFont(new Font("LM Roman 9", Font.BOLD, 14));
@@ -125,7 +125,23 @@ public class Review extends JFrame implements ActionListener{
 	public String say(String first){
 		Settings s=new Settings();
 		Festival textToSay=new Festival();
-		textToSay.festivalSaysText(s._festivalVoice,first);
+		File f=new File("./voice");
+		if(f.exists()){
+			String scan;
+			FileReader in;
+			try {
+				in = new FileReader(f);
+				BufferedReader br = new BufferedReader(in);
+				while(br.ready()){
+					scan=br.readLine();
+					_voice=scan;
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		textToSay.festivalSaysText(_voice,first);
 		return first;
 	}
 

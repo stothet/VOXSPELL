@@ -3,8 +3,10 @@ package Main;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -48,6 +50,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 	JLabel lblSelectLevel = new JLabel();
 	JLabel lblNewLabel = new JLabel("Score: 0");
 	JLabel lblNewLabel_1 = new JLabel();
+	private String _voice;
 
 
 	public enum Files{
@@ -66,7 +69,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 		setBackground(new Color(250, 250, 210));
 
 		this.level=level;
-		
+
 		this.words=words;
 		panel.setBackground(new Color(0, 0, 128));
 
@@ -95,11 +98,8 @@ public class NewSpelling extends JFrame implements ActionListener{
 		lblSelectLevel.setForeground(new Color(255, 255, 0));
 		lblSelectLevel.setFont(new Font("L M Roman Caps10", Font.BOLD, 40));
 
-		lblSelectLevel.setText(s=getWord());
 		lblSelectLevel.setBounds(37, 93, 377, 337);
 		panel.add(lblSelectLevel);
-
-		//this.say(s);
 
 		btnNewButton = new JButton("Video");
 		btnNewButton.setFont(new Font("LM Roman 9", Font.BOLD, 14));
@@ -126,9 +126,9 @@ public class NewSpelling extends JFrame implements ActionListener{
 		panel.add(textField);
 		textField.setColumns(10);
 		lblNewLabel_1.setBounds(464, 342, 70, 15);
-		
+
 		panel.add(lblNewLabel_1);
-		
+
 		JTextArea textArea = new JTextArea();
 		textArea.setBounds(432, 58, 156, 204);
 		panel.add(textArea);
@@ -151,7 +151,23 @@ public class NewSpelling extends JFrame implements ActionListener{
 	public String say(String first){
 		Settings s=new Settings();
 		Festival textToSay=new Festival();
-		textToSay.festivalSaysText(s._festivalVoice,first);
+		File f=new File("./voice");
+		if(f.exists()){
+			String scan;
+			FileReader in;
+			try {
+				in = new FileReader(f);
+				BufferedReader br = new BufferedReader(in);
+				while(br.ready()){
+					scan=br.readLine();
+					_voice=scan;
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		textToSay.festivalSaysText(_voice,first);
 		return first;
 	}
 
@@ -167,27 +183,22 @@ public class NewSpelling extends JFrame implements ActionListener{
 		}
 
 		else if(e.getActionCommand().equals("Re-Listen")){
-			//say(s);
-
-		}
-
-		else if(e.getActionCommand().equals("View Statistics")){
-
+			say(s);
 
 		}
 
 		else if(e.getActionCommand().equals("Video")){
 			NativeLibrary.addSearchPath(
-		            RuntimeUtil.getLibVlcLibraryName(), "/Applications/vlc-2.0.0/VLC.app/Contents/MacOS/lib"
-		        );
-		        Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
-		        
-		        SwingUtilities.invokeLater(new Runnable() {
-		            @Override
-		            public void run() {
-		                new Video();
-		            }
-		        });
+					RuntimeUtil.getLibVlcLibraryName(), "/Applications/vlc-2.0.0/VLC.app/Contents/MacOS/lib"
+					);
+			Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
+
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					new Video();
+				}
+			});
 
 		}
 
@@ -230,7 +241,7 @@ public class NewSpelling extends JFrame implements ActionListener{
 					}
 				}
 				endOfGame();
-				
+
 			}
 			else if(_wordCount==10){
 				Window w=new Window(true);
@@ -242,104 +253,102 @@ public class NewSpelling extends JFrame implements ActionListener{
 					JOptionPane.showMessageDialog( null, "Session has Ended, click on New Spelling for another round" );
 				}
 			}
-				else{
-					lblSelectLevel.setText(s=getWord());
-					btnN.setText("Submit");
-				}
-				textField.setText(null);
+			else{
+				lblSelectLevel.setText(s=getWord());
+				btnN.setText("Submit");
 			}
-
-			else if(e.getActionCommand().equals("Submit")){
-
-				if(textField.getText().isEmpty()||!(textField.getText().matches("[a-zA-Z]+"))){
-					JOptionPane.showMessageDialog( null, "Can only accept characters A-Z or a-z" );
-				}
-				else{
-					//the submit button basically checks if the spelling is right
-					this.check(s);
-				}
-
-			}
+			textField.setText(null);
 		}
 
-		public void check(String word) {
-			Level l=new Level();
-			String ans= textField.getText();
-			_wordCount++;
-			//checks for first attempt
-			if(ans.equalsIgnoreCase(word)){
-				lblSelectLevel.setText("Correct");
-				//say("Correct");
-				score++;
-				lblNewLabel.setText("Score: "+score);
-				textField.setText(null);
-				btnN.setText("Next Word");
+		else if(e.getActionCommand().equals("Submit")){
 
-
+			if(textField.getText().isEmpty()||!(textField.getText().matches("[a-zA-Z]+"))){
+				JOptionPane.showMessageDialog( null, "Can only accept characters A-Z or a-z" );
 			}
 			else{
-				//if answer is wrong, makes a call to festival through bash to say the messages
-				lblSelectLevel.setText("Incorrect, Try once more");
-				//say("Incorrect, Try once more");
-				//say(""+word+","+word);
-				lblSelectLevel.setText(s);
-				btnN.setText("Try Again");
-
-
+				//the submit button basically checks if the spelling is right
+				this.check(s);
 			}
 
-		}
-
-		public void failed(String word) {
-			//similar to check, failed gives the user a second chance after try again is clicked on
-			String ans= textField.getText();
-			//txtOutput.append(ans+ "\n");
-			if(ans.equalsIgnoreCase(word)){
-				//if answer is right on second try, word is added to faulted file
-				lblSelectLevel.setText("Correct");
-				//say("Correct");
-				//addToFile(word,Faulted);
-				textField.setText(null);
-			}
-			else{
-				lblSelectLevel.setText("Incorrect");
-				//say("Incorrect");
-				//if word is failed on both tries, it is added to failed file (for review) and original file (for viewing statistics)
-				File fw = new File ("./failed.txt");
-				addToFile(word, fw);
-			}
-			btnN.setText("Next Word");
-			//submit button is then made visible, try again is invisible again
-		}
-
-		public void endOfGame(){
-			btnNewButton.setVisible(true);
-			btnNewButton_1.setVisible(true);
-			btnS.setVisible(true);
-
-
-			btnN.setVisible(false);
-			btnR.setVisible(false);
-
-			lblSelectLevel.setText("Would you like to watch \n a Video, Practice this level more \n or Move on to the \n Next Level?");
-		}
-
-		public void addToFile(String word,File file) {
-			//adds a word to a file using Java I/O
-			try(FileWriter fw = new FileWriter(file, true);
-					BufferedWriter bw = new BufferedWriter(fw);
-					PrintWriter out = new PrintWriter(bw))
-			{
-				out.println(word);
-			} catch (Exception e) {
-
-			}
-		}
-		
-		public void editStats() throws IOException{
-			Window w=new Window(true);
-			Level l=new Level();
-			int i = l.getStats(w._level, words);
-			lblNewLabel_1.setText("Accuracy: \n"+i);
 		}
 	}
+
+	public void check(String word) {
+		Level l=new Level();
+		String ans= textField.getText();
+		_wordCount++;
+		//checks for first attempt
+		if(ans.equalsIgnoreCase(word)){
+			lblSelectLevel.setText("Correct");
+			say("Correct");
+			score++;
+			lblNewLabel.setText("Score: "+score);
+			textField.setText(null);
+			btnN.setText("Next Word");
+
+
+		}
+		else{
+			lblSelectLevel.setText("Incorrect, Try once more");
+			say("Incorrect, Try once more,"+ " \n" + "    ,"+ word +",           \n " + word);
+			lblSelectLevel.setText(s);
+			btnN.setText("Try Again");
+
+
+		}
+
+	}
+
+	public void failed(String word) {
+		//similar to check, failed gives the user a second chance after try again is clicked on
+		String ans= textField.getText();
+		//txtOutput.append(ans+ "\n");
+		if(ans.equalsIgnoreCase(word)){
+			//if answer is right on second try, word is added to faulted file
+			lblSelectLevel.setText("Correct");
+			//say("Correct");
+			//addToFile(word,Faulted);
+			textField.setText(null);
+		}
+		else{
+			lblSelectLevel.setText("Incorrect");
+			//say("Incorrect");
+			//if word is failed on both tries, it is added to failed file (for review) and original file (for viewing statistics)
+			File fw = new File ("./failed.txt");
+			addToFile(word, fw);
+		}
+		btnN.setText("Next Word");
+		//submit button is then made visible, try again is invisible again
+	}
+
+	public void endOfGame(){
+		btnNewButton.setVisible(true);
+		btnNewButton_1.setVisible(true);
+		btnS.setVisible(true);
+
+
+		btnN.setVisible(false);
+		btnR.setVisible(false);
+
+		lblSelectLevel.setText("Would you like to watch \n a Video, Practice this level more \n or Move on to the \n Next Level?");
+	}
+
+	public void addToFile(String word,File file) {
+		//adds a word to a file using Java I/O
+		try(FileWriter fw = new FileWriter(file, true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				PrintWriter out = new PrintWriter(bw))
+		{
+			out.println(word);
+		} catch (Exception e) {
+
+		}
+	}
+
+	public void editStats() throws IOException{
+		Window w=new Window(true);
+		Level l=new Level();
+		int i = l.getStats(w._level, words);
+		lblNewLabel_1.setText("Accuracy: \n"+i);
+	}
+}

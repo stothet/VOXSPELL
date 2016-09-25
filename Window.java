@@ -146,20 +146,6 @@ public class Window extends JFrame implements ActionListener{
 
 		}
 
-		else if(e.getActionCommand().equals("View Statistics")){
-
-			viewStatistics r;
-			try {
-				r = new viewStatistics();
-				panel.setVisible(false);
-				r.setVisible(true);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-
-		}
 		else if(e.getActionCommand().equals("Settings")){
 			Settings s=new Settings();
 			this.setVisible(false);

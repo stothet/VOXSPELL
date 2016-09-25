@@ -32,7 +32,7 @@ public class Video {
     	
     	
     	
-        JFrame frame = new JFrame("The Awesome Mediaplayer");
+        JFrame frame = new JFrame("The video reward to fullfill your heart!");
 
         mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
 
@@ -43,17 +43,17 @@ public class Video {
         
         frame.setContentPane(panel);
 
-        /*JButton btnMute = new JButton("Mute");
+        JButton btnMute = new JButton("Mute");
         panel.add(btnMute, BorderLayout.NORTH);
         btnMute.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				video.mute();
 			}
-		});*/
+		});
         
         JButton btnNewVid = new JButton("Play New Video Reward");
-        panel.add(btnNewVid, BorderLayout.NORTH);
+        panel.add(btnNewVid, BorderLayout.EAST);
         btnNewVid.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {			

@@ -127,7 +127,24 @@ public class Review extends JFrame implements ActionListener{
 	public String say(String first){
 		Settings s=new Settings();
 		Festival textToSay=new Festival();
-		textToSay.festivalSaysText(s._festivalVoice,first);
+		File f=new File("./voice");
+		if(f.exists()){
+			String scan;
+			FileReader in;
+			try {
+				in = new FileReader(f);
+				BufferedReader br = new BufferedReader(in);
+				while(br.ready()){
+					scan=br.readLine();
+					_voice=scan;
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println(_voice);
+		textToSay.festivalSaysText(_voice,first);
 		return first;
 	}
 

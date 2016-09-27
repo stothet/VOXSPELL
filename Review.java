@@ -6,8 +6,10 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -28,8 +30,9 @@ public class Review extends JFrame implements ActionListener{
 	private JButton btnS = new JButton("Practice");
 	JPanel panel = new JPanel();
 	private JTextField textField;
-	public ArrayList<String> words,failed;
-	private int track;
+	ArrayList<String> failed=new ArrayList<String>();
+	ArrayList<String> words;
+	private int track=0,score;
 	private String s;
 	JLabel lblSelectLevel = new JLabel();
 	JLabel lblNewLabel = new JLabel();
@@ -52,18 +55,38 @@ public class Review extends JFrame implements ActionListener{
 		btnS.addActionListener(this);
 		btnN.addActionListener(this);
 
+		File f=new File("./failed");
+		if(f.exists()){
+			String scan;
+			FileReader in;
+			try {
+				in = new FileReader(f);
+			
+			BufferedReader br = new BufferedReader(in);
+			while(br.ready()){
+				scan=br.readLine();
+				failed.add(scan);
+			}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		getContentPane().add(panel);
+	
 		
-		
+		lblSelectLevel.setText(s=getWord());
 		lblSelectLevel.setBounds(181, 131, 233, 252);
 		panel.add(lblSelectLevel);
+		
 		
 		JButton btnNewButton = new JButton("Video");
 		btnNewButton.setBounds(31, 250, 117, 25);
 		panel.add(btnNewButton);
 		
 		
-		JLabel lblNewLabel = new JLabel("Score");
+		JLabel lblNewLabel = new JLabel("Score: 0");
 		lblNewLabel.setBounds(464, 58, 70, 17);
 		panel.add(lblNewLabel);
 		
@@ -96,31 +119,19 @@ public class Review extends JFrame implements ActionListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
-		String scan;
-		FileReader in;
-		try {
-			in = new FileReader("./failed");
-			BufferedReader br = new BufferedReader(in);
-			while(br.ready()){
-				scan=br.readLine();
-				failed.add(scan);
-			}
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 	}
 	
 	public String getWord(){
-		String w=words.get(track);
+		String w=failed.get(track);
 		track++;
 		return w;
 	}
 
 	public String say(String first){
-		Settings s=new Settings();
-		Festival textToSay=new Festival();
-		textToSay.festivalSaysText(s._festivalVoice,first);
+		//Settings s=new Settings();
+		//Festival textToSay=new Festival();
+		//textToSay.festivalSaysText(s._festivalVoice,first);
 		return first;
 	}
 	
@@ -179,13 +190,8 @@ public class Review extends JFrame implements ActionListener{
 
 		else if(e.getActionCommand().equals("Submit")){
 
-			if(textField.getText().isEmpty()||!(textField.getText().matches("[a-zA-Z]+"))){
-				JOptionPane.showMessageDialog( null, "Can only accept characters A-Z or a-z" );
-			}
-			else{
-				//the submit button basically checks if the spelling is right
+			
 				this.check(s);
-			}
 
 		}
 	}
@@ -198,7 +204,8 @@ public class Review extends JFrame implements ActionListener{
 		if(ans.equalsIgnoreCase(word)){
 			lblSelectLevel.setText("Correct");
 			//say("Correct");
-			//lblNewLabel.setText("Score: "+score);
+			score++;
+			lblNewLabel.setText("Score: "+score);
 			failed.remove(word);
 			textField.setText(null);
 			

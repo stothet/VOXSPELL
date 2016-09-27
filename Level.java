@@ -33,14 +33,15 @@ public class Level {
 	}
 
 	public ArrayList<String> getInput(int lvl) throws IOException{
+		//ArrayList<String> words = new ArrayList<String>();
 		File f=new File("./NZCER-spelling-lists.txt");
 		if(f.exists()){
 			String scan;
 			FileReader in = new FileReader(f);
 			BufferedReader br = new BufferedReader(in);
 			String equate="%Level "+lvl;
-			lvl++;
-			String end="%Level "+(lvl);
+			int lvl2=lvl+1;
+			String end="%Level "+(lvl2);
 			while(br.ready()){
 				scan=br.readLine();
 				if(scan.equals(equate)){
@@ -61,6 +62,21 @@ public class Level {
 		else{
 			return null;
 		}
+		if(lvl==1){
+			for( String w: words){
+				try(FileWriter fw = new FileWriter("./attemptedwords", true);
+						BufferedWriter bw = new BufferedWriter(fw);
+						PrintWriter out = new PrintWriter(bw))
+				{
+					out.println(w);
+				} catch (Exception e) {
+
+				}
+			}
+			return words;
+		}
+		else{
+			
 		while(attempted.size()<10){
 			int index;
 			Random random=new Random();
@@ -74,6 +90,7 @@ public class Level {
 			} catch (Exception e) {
 
 			}
+		}
 		}
 		return attempted;
 	}

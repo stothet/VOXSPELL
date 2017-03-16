@@ -1,4 +1,4 @@
-package Main;
+package fileManagement;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,31 +10,98 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * The purpose of this class is to allow the other classes to have access to the aspects of the current spelling list. 
+ * It gets the size for each level from the different level files as well as the words that will be 
+ * attempted and failed words files for new spelling and review.
+ * @author stim599
+ *
+ */
+
+
 public class Level {
 
 	ArrayList<String> words = new ArrayList<String>();
 	ArrayList<String> attempted = new ArrayList<String>();
-	//ArrayList<String> vstats = new ArrayList<String>();
-	public int _score=0,vstats;
-	private boolean getout=false;;
-	//HashMap<String, Integer> _stats = new HashMap<String, Integer>();
+	public int _score=0,size;
+	private boolean getout=false;
+	private String _file="";
 
-	public enum Levels{
-		level1("./Level1",1,"Level 1"),level2("./Level2",2,"Level 2"),level3("./Level3",3,"Level 3"),level4("./Level4",4,"Level 4"),level5("./Level5",5,"Level 5"),level6("./Level6",6,"Level 6"),level7("./Level7",7,"Level 7"),level8("./Level8",8,"Level 8"),level9("./Level9",9,"Level 9"),level10("./Level10",10,"Level 10"),level11("./Level11",11,"Level 11");
-		public String file;
-		public int value;
-		public String name;
-
-		Levels(String file, int value,String name) {
-			this.value = value;
-			this.file = file;
-			this.name = name;
+	// getting the input from the spelling list for the specified level.
+	public ArrayList<String> getInput(int lvl) throws IOException{
+		_file=(new FileHandling()).setFile();
+		//if file is different from default, this will be set as the absolute path to that file
+		if(_file.equals("")){
+			_file="./config/NZCER-spelling-lists.txt";
 		}
+		File f=new File(_file);
+		if(f.exists()){
+			String scan;
+			FileReader in = new FileReader(f);
+			BufferedReader br = new BufferedReader(in);
+			// where we should start reading from the file
+			String equate="%Level "+lvl;
+			int lvl2=lvl+1;
+			// end of where we should stop reading in the file
+			String end="%Level "+(lvl2);
+			// scan the file adding the word from the line in the file into the words arraylist
+			// keep scanning until the end is reached in which case stop the buffered reader.
+			while(br.ready()){
+				scan=br.readLine();
+				if(scan.equals(equate)){
+					while(true){
+						scan=br.readLine();
+						if(scan.equals(end)||!br.ready()){
+							getout=true;
+							break;
+						}
+						scan=scan.trim();
+						words.add(scan);
+					}
+				}
+				if(getout){
+					break;
+				}
+			}
+
+		}
+		else{
+			return null;
+		}
+		// if we are wanting the first level there are only 10 words so we send all of the words in the arraylist since
+		// these 10 words will always be constant
+		if(lvl==1){
+			return words;
+		}
+		else{
+
+			// if it is not level 1, then we have to get random words from the words arraylist list and add them to the
+			// attempted words arraylist until it's size has reached 10 which means we can now return this arraylist
+			// corresponding to the 10 words required for the new spelling quiz.
+			while(attempted.size()<10){
+				int index;
+				Random random=new Random();
+				index=random.nextInt((words.size()-1) - 0 + 1) + 0;
+				attempted.add(words.get(index));
+			}
+		}
+		return attempted;
 	}
 
-	public ArrayList<String> getInput(int lvl) throws IOException{
-		//ArrayList<String> words = new ArrayList<String>();
-		File f=new File("./NZCER-spelling-lists.txt");
+	
+
+	/**
+	 * this method gets the size of the number of words present in the file of a certain level.
+	 * it reads the corresponding level's words and adds them to the words arraylist. The size of this  
+	 * arraylist is then returned.
+	 *
+	 */
+	public int getSize(int lvl) throws IOException{
+		(new FileHandling()).setFile();
+		if(_file.equals("")){
+			_file="./config/NZCER-spelling-lists.txt";
+		}
+		File f=new File(_file);
 		if(f.exists()){
 			String scan;
 			FileReader in = new FileReader(f);
@@ -54,111 +121,11 @@ public class Level {
 						words.add(scan);
 					}
 				}
-				if(getout){
-					break;
-				}
 			}
-		}
-		else{
-			return null;
-		}
-		if(lvl==1){
-			for( String w: words){
-				try(FileWriter fw = new FileWriter("./attemptedwords", true);
-						BufferedWriter bw = new BufferedWriter(fw);
-						PrintWriter out = new PrintWriter(bw))
-				{
-					out.println(w);
-				} catch (Exception e) {
 
-				}
-			}
-			return words;
 		}
-		else{
-			
-		while(attempted.size()<10){
-			int index;
-			Random random=new Random();
-			index=random.nextInt((words.size()-1) - 0 + 1) + 0;
-			attempted.add(words.get(index));
-			try(FileWriter fw = new FileWriter("./attemptedwords", true);
-					BufferedWriter bw = new BufferedWriter(fw);
-					PrintWriter out = new PrintWriter(bw))
-			{
-				out.println(words.get(index));
-			} catch (Exception e) {
-
-			}
-		}
-		}
-		return attempted;
+		return words.size();
 	}
 
-	public void updateStats(int count,File file){
-		try(FileWriter fw = new FileWriter(file, true);
-				BufferedWriter bw = new BufferedWriter(fw);
-				PrintWriter out = new PrintWriter(bw))
-		{
-			out.println(count);
-		} catch (Exception e) {
-
-		}
-	}
-
-	public void getFailed() throws IOException{
-		words.clear();
-		File f=new File("./.failed");
-		if(f.exists()){
-			String scan;
-			FileReader in = new FileReader(f);
-			BufferedReader br = new BufferedReader(in);
-			while(br.ready()){
-				scan=br.readLine();
-				words.add(scan);
-			}
-		}
-	}
-
-	public int getStats(int level, ArrayList<String> input) throws IOException{
-		
-		String foo=null;
-		
-		for (Levels f : Levels.values()) {
-			if(f.value==level){
-				foo=f.file;
-			}
-		}
-
-		String scan;
-		FileReader in = new FileReader(foo);
-		BufferedReader br = new BufferedReader(in);
-		while(br.ready()){
-			scan=br.readLine();
-			vstats=Integer.parseInt(scan);
-		}
-		
-		return vstats/(input.size());
-	}
-	
-	public int get_Stats(int level, ArrayList<String> input) throws IOException{
-		
-		String foo=null;
-		
-		for (Levels f : Levels.values()) {
-			if(f.value==level){
-				foo=f.file;
-			}
-		}
-
-		String scan;
-		FileReader in = new FileReader(foo);
-		BufferedReader br = new BufferedReader(in);
-		while(br.ready()){
-			scan=br.readLine();
-			vstats=Integer.parseInt(scan);
-		}
-		
-		return vstats/(input.size());
-	}
 }
+
